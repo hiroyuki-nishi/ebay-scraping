@@ -15,7 +15,6 @@ def scraping(target_url: str):
 
 def find_merchandise(_html_data):
     """
-    概要:
     スクレイピングで抽出したhtmlデータから、品名、価格を抽出する
 
     出力結果:
@@ -37,16 +36,23 @@ def find_merchandise(_html_data):
 
 
 def find_search_results(_html_data):
+    """
+    検索結果の件数取得
+    """
     _results = _html_data.find_all('h1', {'class': 'srp-controls__count-heading'})
     _menus = _results[0].find_all('span', {'class': 'BOLD'})
     return '検索結果: ' + _menus[0].text + '=' + _menus[1].text + '件'
 
 
+# def find_menu_results(_html_data, target_menu_name: str):
 def find_menu_results(_html_data):
+    """
+    左メニューの件数取得
+    """
     results = _html_data.find_all('div', {'class': 'x-refine__select__svg'})
-    for item in results:
-        print(item)
-        # TODO: nishi 今すぐ落札だけ抜き出す
+    menus = map(lambda x: {'メニュー名': x.find('span', {'class': 'cbx x-refine__multi-select-cbx'}).text, '件数': x.find('span', {'class': 'x-refine__multi-select-histogram'}).text }, results)
+    print(list(menus))
+    # TODO: 今すぐ落札だけ抽出する
     return
 
 
@@ -81,7 +87,7 @@ url = 'https://www.ebay.com/sch/i.html?_from=R40&_trksid=p2322090.m570.l1313&_nk
 html_data = scraping(target_url=url)
 merchandise = find_merchandise(_html_data=html_data)
 search_results = find_search_results(_html_data=html_data)
-find_menu_results(_html_data=html_data)
+# find_menu_results(_html_data=html_data)
 output_csv(file_name='output.csv', _parsed_data=merchandise)
 over_write_csv_head(file_name='output.csv', text=search_results)
 
