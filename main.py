@@ -81,7 +81,7 @@ url = 'https://www.ebay.com/sch/i.html?_from=R40&_trksid=p2322090.m570.l1313&_nk
 html_data = scraping(target_url=url)
 merchandise = find_merchandise(_html_data=html_data)
 search_results = find_search_results(_html_data=html_data)
-# find_menu_results(_html_data=html_data)
+find_menu_results(_html_data=html_data)
 output_csv(file_name='output.csv', _parsed_data=merchandise)
 over_write_csv_head(file_name='output.csv', text=search_results)
 
