@@ -50,8 +50,17 @@ def find_menu_results(_html_data):
     左メニューの件数取得
     """
     results = _html_data.find_all('div', {'class': 'x-refine__select__svg'})
-    menus = map(lambda x: {'メニュー名': x.find('span', {'class': 'cbx x-refine__multi-select-cbx'}).text, '件数': x.find('span', {'class': 'x-refine__multi-select-histogram'}).text }, results)
+    menus = list(map(lambda x: [x.find('span', {'class': 'cbx x-refine__multi-select-cbx'}).text, x.find('span', {'class': 'x-refine__multi-select-histogram'}).text ], results))
+    # menus = map(lambda x: {'メニュー名': x.find('span', {'class': 'cbx x-refine__multi-select-cbx'}).text, '件数': x.find('span', {'class': 'x-refine__multi-select-histogram'}).text }, results)
     print(list(menus))
+    print(len(list(menus)))
+    menus_dict = dict(menus)
+    print(menus_dict)
+    print(menus_dict.get('今すぐ落札'))
+    # print(dict(menus))
+    # l2 = {'今すぐ落札': '(22)', 'hoge': '1'}
+    # print(len(l2))
+    # print(l2.get('今すぐ落札'))
     # TODO: 今すぐ落札だけ抽出する
     return
 
@@ -83,11 +92,11 @@ def over_write_csv_head(file_name: str, text: str):
 
 
 # ↓ 抽出したい画面のURL
-url = 'https://www.ebay.com/sch/i.html?_from=R40&_trksid=p2322090.m570.l1313&_nkw=Ricoh+GR1s&_sacat=0'
+url = 'https://www.ebay.com/sch/i.html?_from=R40&_trksid=p2334524.m570.l1313&_nkw=Ricoh+GR1s&_sacat=0&LH_TitleDesc=0&_odkw=Ricoh+GR1s&_osacat=0'
 html_data = scraping(target_url=url)
-merchandise = find_merchandise(_html_data=html_data)
-search_results = find_search_results(_html_data=html_data)
-# find_menu_results(_html_data=html_data)
-output_csv(file_name='output.csv', _parsed_data=merchandise)
-over_write_csv_head(file_name='output.csv', text=search_results)
+# merchandise = find_merchandise(_html_data=html_data)
+# search_results = find_search_results(_html_data=html_data)
+find_menu_results(_html_data=html_data)
+# output_csv(file_name='output.csv', _parsed_data=merchandise)
+# over_write_csv_head(file_name='output.csv', text=search_results)
 
