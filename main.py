@@ -45,24 +45,19 @@ def find_search_results(_html_data):
 
 
 # def find_menu_results(_html_data, target_menu_name: str):
-def find_menu_results(_html_data):
+def find_menu_results(_html_data, _menu_name):
     """
     左メニューの件数取得
     """
+    _menus = []
     results = _html_data.find_all('div', {'class': 'x-refine__select__svg'})
-    menus = list(map(lambda x: [x.find('span', {'class': 'cbx x-refine__multi-select-cbx'}).text, x.find('span', {'class': 'x-refine__multi-select-histogram'}).text ], results))
-    # menus = map(lambda x: {'メニュー名': x.find('span', {'class': 'cbx x-refine__multi-select-cbx'}).text, '件数': x.find('span', {'class': 'x-refine__multi-select-histogram'}).text }, results)
-    print(list(menus))
-    print(len(list(menus)))
-    menus_dict = dict(menus)
-    print(menus_dict)
-    print(menus_dict.get('今すぐ落札'))
-    # print(dict(menus))
-    # l2 = {'今すぐ落札': '(22)', 'hoge': '1'}
-    # print(len(l2))
-    # print(l2.get('今すぐ落札'))
-    # TODO: 今すぐ落札だけ抽出する
-    return
+    for item in results:
+        _maybe_menu_name = item.find('span', {'class': 'cbx x-refine__multi-select-cbx'})
+        _maybe_count = item.find('span', {'class': 'x-refine__multi-select-histogram'})
+        _n = _maybe_menu_name.text if _maybe_menu_name is not None else 'None'
+        _c = _maybe_count.text.strip().translate(str.maketrans({"(": "", ")": ""})) if _maybe_count is not None else 'None'
+        _menus.append([_n, _c])
+    return dict(_menus).get(_menu_name)
 
 
 def output_csv(file_name: str, _parsed_data: list):
@@ -92,11 +87,12 @@ def over_write_csv_head(file_name: str, text: str):
 
 
 # ↓ 抽出したい画面のURL
-url = 'https://www.ebay.com/sch/i.html?_from=R40&_trksid=p2334524.m570.l1313&_nkw=Ricoh+GR1s&_sacat=0&LH_TitleDesc=0&_odkw=Ricoh+GR1s&_osacat=0'
+url = 'https://www.ebay.com/sch/i.html?_from=R40&_nkw=Ricoh+GR1s&_sacat=0&LH_TitleDesc=0&_fcid=1'
 html_data = scraping(target_url=url)
 # merchandise = find_merchandise(_html_data=html_data)
 # search_results = find_search_results(_html_data=html_data)
-find_menu_results(_html_data=html_data)
+menu_count = find_menu_results(_html_data=html_data, _menu_name='今すぐ落札')
+print(menu_count)
 # output_csv(file_name='output.csv', _parsed_data=merchandise)
 # over_write_csv_head(file_name='output.csv', text=search_results)
 
