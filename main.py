@@ -8,9 +8,12 @@ def scraping(target_url: str):
     """
     概要: 指定されたurlからhtmlデータをスクレイピングする
     """
-    r = requests.get(target_url)
-    _html_data = BeautifulSoup(r.text, 'html.parser')
-    return _html_data
+    try:
+        r = requests.get(target_url)
+        _html_data = BeautifulSoup(r.text, 'html.parser')
+        return _html_data
+    except Exception as e:
+        print(e)
 
 
 def find_merchandise(_html_data):
